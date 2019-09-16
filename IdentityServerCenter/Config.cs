@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using IdentityServer4.Models;
+using IdentityServer4.Test;
 
 namespace IdentityServerCenter {
     public class Config {
@@ -28,6 +29,35 @@ namespace IdentityServerCenter {
                         new Secret("secret".Sha256())
                     },
                     AllowedScopes = {"api"}
+                },
+                // resource owner password grant client
+                new Client
+                {
+                    ClientId = "pwdClient",
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+
+                    ClientSecrets =
+                    {
+                        new Secret("secret".Sha256())
+                    },
+                    AllowedScopes = { "api" }
+                }
+            };
+        }
+        public static List<TestUser> GetUsers() {
+            return new List<TestUser>
+            {
+                new TestUser
+                {
+                    SubjectId = "1",
+                    Username = "tanzb",
+                    Password = "password"
+                },
+                new TestUser
+                {
+                    SubjectId = "2",
+                    Username = "bob",
+                    Password = "password"
                 }
             };
         }

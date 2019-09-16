@@ -1,10 +1,10 @@
-﻿using IdentityModel.Client;
-using System;
+﻿using System;
 using System.Net.Http;
+using IdentityModel.Client;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
-namespace ThirdPartyClient {
+namespace PwdClient {
     class Program {
         static async Task Main(string[] args) {
 
@@ -16,10 +16,12 @@ namespace ThirdPartyClient {
                 return;
             }
 
-            var tokenResponse = await tokenClient.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest {
+            var tokenResponse = await tokenClient.RequestPasswordTokenAsync(new PasswordTokenRequest() {
                 Address = disco.TokenEndpoint,  // Address = disco.TokenEndpoint 请求Token的 TokenEndpoint
-                ClientId = "client",
+                ClientId = "pwdClient",         // ClientId 不能重复
                 ClientSecret = "secret",
+                UserName = "tanzb",
+                Password = "password",
                 Scope = "api"
             });
 
