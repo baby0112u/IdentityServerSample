@@ -13,6 +13,7 @@ namespace IdentityServerCenterMVC {
         public static IEnumerable<ApiResource> GetApiResources() {
             return new List<ApiResource>()
             {
+
                 new ApiResource("api","My Api")
             };
         }
@@ -42,12 +43,35 @@ namespace IdentityServerCenterMVC {
                     },
                     AllowedScopes = { "api" }
                 },
+                #region MyRegion
+                //new Client
+                //{
+                //    ClientId = "mvc",
+                //    ClientName = "MVC Client",
+                //    AllowedGrantTypes = GrantTypes.Implicit,
+
+                //    // where to redirect to after login
+                //    RedirectUris = { "http://localhost:5002/signin-oidc" },
+
+                //    // where to redirect to after logout
+                //    PostLogoutRedirectUris = { "http://localhost:5002/signout-callback-oidc" },
+
+                //    AllowedScopes = new List<string>
+                //    {
+                //        IdentityServerConstants.StandardScopes.OpenId,
+                //        IdentityServerConstants.StandardScopes.Profile
+                //    }
+                //},
+	            #endregion
                 new Client
                 {
                     ClientId = "mvc",
-                    ClientName = "MVC Client",
-                    AllowedGrantTypes = GrantTypes.Implicit,
-
+                    ClientName = "Hybrid Client",
+                    AllowedGrantTypes = GrantTypes.Hybrid,
+                    ClientSecrets =
+                    {
+                        new Secret("secret".Sha256())
+                    },
                     // where to redirect to after login
                     RedirectUris = { "http://localhost:5002/signin-oidc" },
 
@@ -58,8 +82,11 @@ namespace IdentityServerCenterMVC {
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile
-                    }
+                        ,"api"
+                    },
+                    AllowOfflineAccess = true
                 }
+
             };
         }
         public static List<TestUser> GetUsers() {
@@ -75,19 +102,23 @@ namespace IdentityServerCenterMVC {
                 new TestUser
                 {
                     SubjectId = "2",
-                    Username = "bob",
+                    Username = "bob2",
                     Password = "password"
-                },new TestUser{SubjectId = "818727", Username = "alice", Password = "alice",
-                Claims =
-                {
-                    new Claim(JwtClaimTypes.Name, "Alice Smith"),
-                    new Claim(JwtClaimTypes.GivenName, "Alice"),
-                    new Claim(JwtClaimTypes.FamilyName, "Smith"),
-                    new Claim(JwtClaimTypes.Email, "AliceSmith@email.com"),
-                    new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
-                    new Claim(JwtClaimTypes.WebSite, "http://alice.com"),
-                    new Claim(JwtClaimTypes.Address, @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", IdentityServer4.IdentityServerConstants.ClaimValueTypes.Json)
-                }
+                },
+                new TestUser{
+                    SubjectId = "818727",
+                    Username = "alice",
+                    Password = "alice",
+                    Claims =
+                    {
+                        new Claim(JwtClaimTypes.Name, "Alice Smith"),
+                        new Claim(JwtClaimTypes.GivenName, "Alice"),
+                        new Claim(JwtClaimTypes.FamilyName, "Smith"),
+                        new Claim(JwtClaimTypes.Email, "AliceSmith@email.com"),
+                        new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
+                        new Claim(JwtClaimTypes.WebSite, "http://alice.com"),
+                        new Claim(JwtClaimTypes.Address, @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", IdentityServer4.IdentityServerConstants.ClaimValueTypes.Json)
+                    }
             },
             new TestUser{SubjectId = "88421113", Username = "bob", Password = "bob",
                 Claims =
@@ -123,7 +154,8 @@ namespace IdentityServerCenterMVC {
             return new List<IdentityResource>
             {
                 new IdentityResources.OpenId(),
-                new IdentityResources.Profile(),
+                new IdentityResources.Profile()
+                //,"api"
             };
         }
     }

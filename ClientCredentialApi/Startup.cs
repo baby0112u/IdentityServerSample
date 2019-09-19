@@ -21,16 +21,26 @@ namespace ClientCredentialApi {
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddAuthentication("Bearer")
+            //    .AddIdentityServerAuthentication(options => {
+            //        options.Authority = "http://localhost:5000";
+            //        options.ApiName = "api";
+            //        options.RequireHttpsMetadata = false;
+            //    });
+
+            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddMvcCore()
+                .AddAuthorization()
+                .AddJsonFormatters();
 
             services.AddAuthentication("Bearer")
-                .AddIdentityServerAuthentication(options =>
-                {
+                .AddJwtBearer("Bearer", options => {
                     options.Authority = "http://localhost:5000";
-                    options.ApiName = "api";
                     options.RequireHttpsMetadata = false;
-                });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+                    options.Audience = "api";
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

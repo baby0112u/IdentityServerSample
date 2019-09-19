@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 namespace IdentityServerCenterMVC {
     public class Startup {
@@ -25,6 +27,8 @@ namespace IdentityServerCenterMVC {
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            #region MyRegion
+
             //services.AddMvcCore()
             //    .AddAuthorization()
             //    .AddJsonFormatters();
@@ -58,8 +62,11 @@ namespace IdentityServerCenterMVC {
             //    throw new Exception("need to configure key material");
             //}
 
+            #endregion
+
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
+                //.AddSigningCredential(new RsaSecurityKey(RSA.Create("baby0112")))
                 .AddInMemoryApiResources(Config.GetApiResources())
                 .AddInMemoryClients(Config.GeClients())
                 .AddTestUsers(Config.GetUsers())

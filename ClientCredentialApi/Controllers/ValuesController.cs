@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ClientCredentialApi.Controllers {
-    [Authorize]
+    
     [Route("api/[controller]")]
     [ApiController]
     public class ValuesController : ControllerBase {
         // GET api/values
+
+        [Authorize]
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get() {
             return new string[] { "value1", "value2" };
@@ -19,7 +21,7 @@ namespace ClientCredentialApi.Controllers {
         // GET api/values/5
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id) {
-            return "value";
+            return $"value {id}";
         }
 
         // POST api/values
