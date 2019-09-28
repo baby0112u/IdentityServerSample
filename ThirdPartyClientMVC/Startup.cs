@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -23,6 +24,11 @@ namespace ThirdPartyClientMVC {
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            #region MyRegion
+
             //services.Configure<CookiePolicyOptions>(options => {
             //    // This lambda determines whether user consent for non-essential cookies is needed for a given request.
             //    options.CheckConsentNeeded = context => true;
@@ -46,37 +52,61 @@ namespace ThirdPartyClientMVC {
             //    });
 
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddMvc();
+            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+            //services.AddAuthentication(options =>
+            //    {
+            //        options.DefaultScheme = "Cookies";
+            //        options.DefaultChallengeScheme = "oidc";
+            //    })
+            //    .AddCookie("Cookies")
+            //    .AddOpenIdConnect("oidc", options =>
+            //    {
+            //        options.SignInScheme = "Cookies";
+            //        options.Authority = "http://localhost:5000";
+            //        options.RequireHttpsMetadata = false;
+            //        options.ClientId = "mvc";
+            //        options.ClientSecret = "secret";
+            //        options.ResponseType = "code id_token";
+            //        options.SaveTokens = true;
+            //        options.GetClaimsFromUserInfoEndpoint = true;
+            //        //options.Scope.Add("api");
+            //        options.Scope.Add("api.full_access");
+            //        options.Scope.Add("api.read_only");
+            //        options.Scope.Add("offline_access");
+            //        options.ClaimActions.MapJsonKey("website", "website");
+            //    });
+
+            #endregion
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             services.AddAuthentication(options =>
                 {
-                    options.DefaultScheme = "Cookies";
-                    options.DefaultChallengeScheme = "oidc";
+                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
                 })
-                .AddCookie("Cookies")
-                .AddOpenIdConnect("oidc", options =>
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
                 {
-                    options.SignInScheme = "Cookies";
+                    options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                     options.Authority = "http://localhost:5000";
                     options.RequireHttpsMetadata = false;
-                    options.ClientId = "mvc";
-                    options.ClientSecret = "secret";
-                    options.ResponseType = "code id_token";
+                    options.ClientId = "hybrid client";
+                    options.ClientSecret = "hybrid secret";
                     options.SaveTokens = true;
-                    options.GetClaimsFromUserInfoEndpoint = true;
-                    options.Scope.Add("api");
-                    options.Scope.Add("offline_access");
-                    options.ClaimActions.MapJsonKey("website", "website");
-                });
-            //.AddOpenIdConnect("oidc", options => {
-            //    options.Authority = "http://localhost:5000";
-            //    options.RequireHttpsMetadata = false;
+                    options.ResponseType = "code id_token";
 
-            //    options.ClientId = "mvc";
-            //    options.SaveTokens = true;
-            //});
+                    options.Scope.Clear();
+                    options.Scope.Add("api");
+                    options.Scope.Add(OidcConstants.StandardScopes.Address);
+                    options.Scope.Add(OidcConstants.StandardScopes.Email);
+                    options.Scope.Add(OidcConstants.StandardScopes.OfflineAccess);
+                    options.Scope.Add(OidcConstants.StandardScopes.OpenId);
+                    options.Scope.Add(OidcConstants.StandardScopes.Phone);
+                    options.Scope.Add(OidcConstants.StandardScopes.Profile);
+
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

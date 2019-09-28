@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using IdentityModel;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -62,17 +66,19 @@ namespace IdentityServerCenterMVC {
             //    throw new Exception("need to configure key material");
             //}
 
-            #endregion
 
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
                 //.AddSigningCredential(new RsaSecurityKey(RSA.Create("baby0112")))
                 .AddInMemoryApiResources(Config.GetApiResources())
-                .AddInMemoryClients(Config.GeClients())
+                .AddInMemoryClients(Config.GetClients())
                 .AddTestUsers(Config.GetUsers())
                 .AddInMemoryIdentityResources(Config.GetIdentityResources()); ;
 
+            #endregion
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

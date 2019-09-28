@@ -7,16 +7,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ClientCredentialApi.Controllers {
     
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class ValuesController : ControllerBase {
         // GET api/values
-
         [Authorize]
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get() {
             return new string[] { "value1", "value2" };
         }
+        [HttpGet]
+        public ActionResult<IEnumerable<string>> GetAccess() {
+            return new string[] { "value1", "value2" };
+        }
+
 
         // GET api/values/5
         [HttpGet("{id}")]

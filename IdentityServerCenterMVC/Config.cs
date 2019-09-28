@@ -14,13 +14,42 @@ namespace IdentityServerCenterMVC {
             return new List<ApiResource>()
             {
 
-                new ApiResource("api","My Api")
+                #region MyRegion    为什么这样就不行
+
+
+                //new ApiResource
+                //{
+                //    Name = "api1",
+                //    Description = "Api Resource"
+                //    ////Scopes are not a function of the user, only the client the user is using.
+                //    //// 暂时还不知道api里定义不同Scopes怎么用
+                //    //Scopes =
+                //    //{
+                //    //    new Scope()
+                //    //    {
+                //    //        Name = "api.full_access",
+                //    //        DisplayName = "Full access to API"
+                //    //    },
+                //    //    new Scope
+                //    //    {
+                //    //        Name = "api.read_only",
+                //    //        DisplayName = "Read only access to API"
+                //    //    }
+                //    //}
+                //}
+                
+                #endregion
+
+                new ApiResource("api","My Api Resource")
+
             };
         }
 
-        public static IEnumerable<Client> GeClients() {
+        public static IEnumerable<Client> GetClients() {
             return new List<Client>()
             {
+                #region MyRegion
+                /*
                 new Client()
                 {
                     ClientId = "client",
@@ -43,35 +72,13 @@ namespace IdentityServerCenterMVC {
                     },
                     AllowedScopes = { "api" }
                 },
-                #region MyRegion
-                //new Client
-                //{
-                //    ClientId = "mvc",
-                //    ClientName = "MVC Client",
-                //    AllowedGrantTypes = GrantTypes.Implicit,
-
-                //    // where to redirect to after login
-                //    RedirectUris = { "http://localhost:5002/signin-oidc" },
-
-                //    // where to redirect to after logout
-                //    PostLogoutRedirectUris = { "http://localhost:5002/signout-callback-oidc" },
-
-                //    AllowedScopes = new List<string>
-                //    {
-                //        IdentityServerConstants.StandardScopes.OpenId,
-                //        IdentityServerConstants.StandardScopes.Profile
-                //    }
-                //},
-	            #endregion
+               
                 new Client
                 {
                     ClientId = "mvc",
-                    ClientName = "Hybrid Client",
-                    AllowedGrantTypes = GrantTypes.Hybrid,
-                    ClientSecrets =
-                    {
-                        new Secret("secret".Sha256())
-                    },
+                    ClientName = "MVC Client",
+                    AllowedGrantTypes = GrantTypes.Implicit,
+
                     // where to redirect to after login
                     RedirectUris = { "http://localhost:5002/signin-oidc" },
 
@@ -82,9 +89,38 @@ namespace IdentityServerCenterMVC {
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile
+                    }
+                },
+                */
+	            #endregion
+
+                new Client
+                {
+                    ClientId = "hybrid client",
+                    ClientName = "Hybrid Client Demo",
+                    AllowedGrantTypes = GrantTypes.Hybrid,
+                    ClientSecrets =
+                    {
+                        new Secret("hybrid secret".Sha256())
+                    },
+                    // where to redirect to after login
+                    RedirectUris = { "http://localhost:5002/signin-oidc" },
+
+                    // where to redirect to after logout
+                    PostLogoutRedirectUris = { "http://localhost:5002/signout-callback-oidc" },
+
+                    // AlwaysIncludeUserClaimsInIdToken = true, // 根据情况，是否把用户的Claims 添加到IdToken里面
+
+                    AllowedScopes = new List<string>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId
+                        ,IdentityServerConstants.StandardScopes.Phone
+                        ,IdentityServerConstants.StandardScopes.Address
+                        ,IdentityServerConstants.StandardScopes.Email
+                        ,IdentityServerConstants.StandardScopes.Profile
                         ,"api"
                     },
-                    AllowOfflineAccess = true
+                    AllowOfflineAccess = true // refresh token
                 }
 
             };
@@ -120,32 +156,32 @@ namespace IdentityServerCenterMVC {
                         new Claim(JwtClaimTypes.Address, @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", IdentityServer4.IdentityServerConstants.ClaimValueTypes.Json)
                     }
             },
-            new TestUser{SubjectId = "88421113", Username = "bob", Password = "bob",
-                Claims =
-                {
-                    new Claim(JwtClaimTypes.Name, "Bob Smith"),
-                    new Claim(JwtClaimTypes.GivenName, "Bob"),
-                    new Claim(JwtClaimTypes.FamilyName, "Smith"),
-                    new Claim(JwtClaimTypes.Email, "BobSmith@email.com"),
-                    new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
-                    new Claim(JwtClaimTypes.WebSite, "http://bob.com"),
-                    new Claim(JwtClaimTypes.Address, @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", IdentityServer4.IdentityServerConstants.ClaimValueTypes.Json),
-                    new Claim("location", "somewhere")
+                new TestUser{SubjectId = "88421113", Username = "bob", Password = "bob",
+                    Claims =
+                    {
+                        new Claim(JwtClaimTypes.Name, "Bob Smith"),
+                        new Claim(JwtClaimTypes.GivenName, "Bob"),
+                        new Claim(JwtClaimTypes.FamilyName, "Smith"),
+                        new Claim(JwtClaimTypes.Email, "BobSmith@email.com"),
+                        new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
+                        new Claim(JwtClaimTypes.WebSite, "http://bob.com"),
+                        new Claim(JwtClaimTypes.Address, @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", IdentityServer4.IdentityServerConstants.ClaimValueTypes.Json),
+                        new Claim("location", "somewhere")
+                    }
+                },
+                new TestUser{SubjectId = "88421114", Username = "tanzb", Password = "tanzb",
+                    Claims =
+                    {
+                        new Claim(JwtClaimTypes.Name, "Tan Zhenbiao"),
+                        new Claim(JwtClaimTypes.GivenName, "BoTanb"),
+                        new Claim(JwtClaimTypes.FamilyName, "Zhenbiao"),
+                        new Claim(JwtClaimTypes.Email, "BobSmith@email.com"),
+                        new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
+                        new Claim(JwtClaimTypes.WebSite, "http://bob.com"),
+                        new Claim(JwtClaimTypes.Address, @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", IdentityServer4.IdentityServerConstants.ClaimValueTypes.Json),
+                        new Claim("location", "somewhere")
+                    }
                 }
-            },
-            new TestUser{SubjectId = "88421114", Username = "tanzb", Password = "tanzb",
-                Claims =
-                {
-                    new Claim(JwtClaimTypes.Name, "Tan Zhenbiao"),
-                    new Claim(JwtClaimTypes.GivenName, "BoTanb"),
-                    new Claim(JwtClaimTypes.FamilyName, "Zhenbiao"),
-                    new Claim(JwtClaimTypes.Email, "BobSmith@email.com"),
-                    new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
-                    new Claim(JwtClaimTypes.WebSite, "http://bob.com"),
-                    new Claim(JwtClaimTypes.Address, @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", IdentityServer4.IdentityServerConstants.ClaimValueTypes.Json),
-                    new Claim("location", "somewhere")
-                }
-            }
             };
         }
 
@@ -153,9 +189,13 @@ namespace IdentityServerCenterMVC {
         {
             return new List<IdentityResource>
             {
-                new IdentityResources.OpenId(),
-                new IdentityResources.Profile()
-                //,"api"
+                new IdentityResources.OpenId()
+                ,new IdentityResources.Phone()
+                ,new IdentityResources.Address()
+                ,new IdentityResources.Email()
+                ,new IdentityResources.Profile()
+                //,"api" 
+                ,new IdentityResource("roles", "角色", new List<string>{ "role" })
             };
         }
     }
