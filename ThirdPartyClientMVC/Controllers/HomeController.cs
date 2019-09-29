@@ -13,12 +13,20 @@ using Newtonsoft.Json.Linq;
 using ThirdPartyClientMVC.Models;
 
 namespace ThirdPartyClientMVC.Controllers {
+
+
     public class HomeController : Controller {
         public IActionResult Index() {
             return View();
         }
 
-        [Authorize]
+        [Authorize(Roles = "普通用户,管理员")]
+        public IActionResult About()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "管理员")]
         public IActionResult Privacy() {
             return View();
         }

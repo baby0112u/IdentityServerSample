@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ThirdPartyClientMVC {
     public class Startup {
@@ -112,6 +113,12 @@ namespace ThirdPartyClientMVC {
                     options.Scope.Add("roles");
 
                     options.ClaimActions.MapUniqueJsonKey("role", "role");
+
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        NameClaimType = JwtClaimTypes.Name,
+                        RoleClaimType = JwtClaimTypes.Role
+                    };
 
                     // options.ClaimActions.Add("api");
                     // ClaimActions 默认过滤掉的Claims都在这个集合里，如果不需要默认过滤掉，则需要把它从这个集合移除掉
