@@ -7,6 +7,7 @@ using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using ThirdPartyClientMVC.AuthPolicy;
 
 namespace ThirdPartyClientMVC {
     public class Startup {
@@ -111,14 +113,18 @@ namespace ThirdPartyClientMVC {
                     options.Scope.Add(OidcConstants.StandardScopes.Phone);
                     options.Scope.Add(OidcConstants.StandardScopes.Profile);
                     options.Scope.Add("roles");
+                    options.Scope.Add("locations");
 
                     options.ClaimActions.MapUniqueJsonKey("role", "role");
+                    options.ClaimActions.MapUniqueJsonKey("location", "location");
 
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         NameClaimType = JwtClaimTypes.Name,
                         RoleClaimType = JwtClaimTypes.Role
                     };
+
+                    
 
                     // options.ClaimActions.Add("api");
                     // ClaimActions 默认过滤掉的Claims都在这个集合里，如果不需要默认过滤掉，则需要把它从这个集合移除掉
@@ -129,6 +135,21 @@ namespace ThirdPartyClientMVC {
                     //options.ClaimActions.Remove("exp");
 
                 });
+
+            services.AddAuthorization(options =>
+            {
+                //options.AddPolicy("SmithInSomewhere", builder =>
+                //{
+                //    builder.RequireAuthenticatedUser();
+                //    builder.RequireClaim(JwtClaimTypes.FamilyName, "Smith");
+                //    builder.RequireClaim("location", "somewhere");
+                //});
+                options.AddPolicy("SmithInSomewhere", builder =>
+                    {
+                        builder.AddRequirements(new SmithInSomeWhereRequirement());
+                    });
+            });
+            services.AddSingleton<IAuthorizationHandler, SmithInSomeWhereHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -119,7 +119,7 @@ namespace IdentityServerCenterMVC {
                         ,IdentityServerConstants.StandardScopes.Email
                         ,IdentityServerConstants.StandardScopes.Profile
                         ,"api"
-                        ,"roles"
+                        ,"roles","locations"
                     },
                     AllowOfflineAccess = true // refresh token
                 }
@@ -197,8 +197,9 @@ namespace IdentityServerCenterMVC {
                 ,new IdentityResources.Address()
                 ,new IdentityResources.Email()
                 ,new IdentityResources.Profile()
-                //,"api" 
+                //,"api" locations
                 ,new IdentityResource("roles", "角色", new List<string>{ "role" })
+                ,new IdentityResource("locations", "地点", new List<string>{ "location" })
             };
         }
     }

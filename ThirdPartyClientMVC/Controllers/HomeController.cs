@@ -26,7 +26,7 @@ namespace ThirdPartyClientMVC.Controllers {
             return View();
         }
 
-        [Authorize(Roles = "管理员")]
+        [Authorize(Policy = "SmithInSomewhere")]
         public IActionResult Privacy() {
             return View();
         }
