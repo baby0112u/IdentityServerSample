@@ -67,6 +67,8 @@ namespace IdentityServerCenterMVC {
             //}
 
 
+            #endregion
+
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
                 //.AddSigningCredential(new RsaSecurityKey(RSA.Create("baby0112")))
@@ -74,8 +76,6 @@ namespace IdentityServerCenterMVC {
                 .AddInMemoryClients(Config.GetClients())
                 .AddTestUsers(Config.GetUsers())
                 .AddInMemoryIdentityResources(Config.GetIdentityResources()); ;
-
-            #endregion
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 

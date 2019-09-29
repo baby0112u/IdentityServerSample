@@ -79,6 +79,7 @@ namespace ThirdPartyClientMVC {
 
             #endregion
 
+            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // 注释掉后，默认的名称都改变了
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             services.AddAuthentication(options =>
@@ -98,6 +99,9 @@ namespace ThirdPartyClientMVC {
                     options.ResponseType = "code id_token";
 
                     options.Scope.Clear();
+                    options.GetClaimsFromUserInfoEndpoint = true;   // 从UserInfoEndpoint获取Claims
+                    
+
                     options.Scope.Add("api");
                     options.Scope.Add(OidcConstants.StandardScopes.Address);
                     options.Scope.Add(OidcConstants.StandardScopes.Email);
@@ -105,6 +109,17 @@ namespace ThirdPartyClientMVC {
                     options.Scope.Add(OidcConstants.StandardScopes.OpenId);
                     options.Scope.Add(OidcConstants.StandardScopes.Phone);
                     options.Scope.Add(OidcConstants.StandardScopes.Profile);
+                    options.Scope.Add("roles");
+
+                    options.ClaimActions.MapUniqueJsonKey("role", "role");
+
+                    // options.ClaimActions.Add("api");
+                    // ClaimActions 默认过滤掉的Claims都在这个集合里，如果不需要默认过滤掉，则需要把它从这个集合移除掉
+                    // 如果需要过滤掉某个Claims 则只需要把对应的Claims添加到这个集合就可以了
+
+                    //options.ClaimActions.Remove("arm");
+                    //options.ClaimActions.Remove("nbf");
+                    //options.ClaimActions.Remove("exp");
 
                 });
         }
